@@ -1,13 +1,15 @@
 const electron = require('electron');
 
-const { app, ipcMain, BrowserWindow } = electron;
+const { app, protocol, ipcMain, BrowserWindow } = electron;
 
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { channels } = require('../src/shared/constants');
+const { openFile } = require('./openFile');
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-require('electron-reload');
+
+const PROTOCOL = 'gemiso.proxima-fs';
 
 let mainWindow;
 
@@ -21,11 +23,12 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../public/index.html')}`,
-  );
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:3000');
+  } else {
+    mainWindow.loadFile('build/index.html');
+  }
+
   mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', () => {
@@ -33,7 +36,19 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  protocol.registerFileProtocol(PROTOCOL, (request, callback) => {
+    const { url } = request;
+    console.log(url);
+    alert(url);
+  });
+  console.log('protocol registed');
+  createWindow();
+});
+
+app.on('open-url', () => {
+  console.log('@@@@');
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -47,9 +62,16 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on(channels.APP_INFO, event => {
-  event.sender.send(channels.APP_INFO, {
-    appName: app.getName(),
-    appVersion: app.getVersion(),
+ipcMain.on(channels.FILE_OPEN, async event => {
+  const result = await openFile({
+    ownerWin: mainWindow,
+    defaultPath: app.getPath('documents'),
+  });
+
+  if (result.canceled) {
+    return;
+  }
+  event.sender.send(channels.FILE_OPEN, {
+    filePath: result.filePaths,
   });
 });

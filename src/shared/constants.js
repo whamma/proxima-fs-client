@@ -1,5 +1,6 @@
 module.exports = {
   channels: {
-    APP_INFO: 'app_info',
+    APP_MODE: 'app_mode',
+    FILE_OPEN: 'file_open',
   },
 };

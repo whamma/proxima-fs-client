@@ -1,34 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../App.css';
-import { channels } from '../shared/constants';
+import UploadView from './upload/UploadView';
+import DownloadView from './download/DownloadView';
 
-// eslint-disable-next-line no-undef
-const { ipcRenderer } = window.require('electron');
-
-function App() {
-  const [appInfo, setAppInfo] = useState({
-    appName: '',
-    appVersion: '',
-  });
-
-  const handleClick = () => {
-    ipcRenderer.send(channels.APP_INFO);
-    ipcRenderer.on(channels.APP_INFO, (event, arg) => {
-      ipcRenderer.removeAllListeners(channels.APP_INFO);
-      const { appName, appVersion } = arg;
-      setAppInfo({ appName, appVersion });
-    });
-  };
+const App = () => {
   return (
     <div>
-      <button onClick={handleClick}>Upload</button>
-      {appInfo.appName && (
-        <p>
-          {appInfo.appName} version {appInfo.appVersion}
-        </p>
-      )}
+      <UploadView />
     </div>
   );
-}
+};
 
 export default App;
