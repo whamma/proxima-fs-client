@@ -16,28 +16,38 @@
         "default"
       ]
     },
-    "asar": false,
     "files": [
       "build/**/*",
       "node_modules/**/*"
-    ]
+    ],
+    "protocols": {
+      "name": "proxima-fs",
+      "schemes": [
+        "gemiso.proxima-fs"
+      ]
+    }
   },
   "dependencies": {
+    "antd": "^3.25.0",
+    "customize-cra": "^0.8.0",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^5.1.0",
     "express": "^4.17.1",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "react": "^16.11.0",
+    "react-app-rewired": "^2.1.5",
     "react-dom": "^16.11.0",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "url-parse": "^1.4.7",
+    "uuid": "^3.3.3"
   },
   "scripts": {
     "electron": "NODE_ENV=dev nodemon --exec \"\"electron .\"\"",
-    "start": "BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "BROWSER=none react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
     "build-electron": "mkdir build/src && cp -r electron/. build/electron && cp -r src/shared/. build/src/shared",
     "build-electron:onwin": "mkdir build/src && robocopy electron build/electron /S & robocopy src/shared build/src/shared /S",
     "build:osx": "electron-builder --mac",
@@ -71,6 +81,7 @@
     ]
   },
   "devDependencies": {
+    "babel-plugin-import": "^1.12.2",
     "cross-env": "^6.0.3",
     "electron": "^7.0.0",
     "electron-builder": "^22.1.0",

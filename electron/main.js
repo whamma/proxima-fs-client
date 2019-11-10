@@ -1,9 +1,10 @@
 const electron = require('electron');
 
-const { app, protocol, ipcMain, BrowserWindow } = electron;
+const { app, dialog, protocol, ipcMain, BrowserWindow } = electron;
 
 const path = require('path');
 const isDev = require('electron-is-dev');
+const Url = require('url-parse');
 const { channels } = require('../src/shared/constants');
 const { openFile } = require('./openFile');
 
@@ -36,18 +37,29 @@ function createWindow() {
   });
 }
 
+let customUrl = '';
+let mode = '';
+
 app.on('ready', () => {
-  protocol.registerFileProtocol(PROTOCOL, (request, callback) => {
-    const { url } = request;
-    console.log(url);
-    alert(url);
-  });
+  // protocol.registerFileProtocol(PROTOCOL, (request, callback) => {
+  //   const url = new Url(request.url);
+  //   dialog.showMessageBox(mainWindow, {
+  //     message: url.query,
+  //   });
+  // });
+
   console.log('protocol registed');
   createWindow();
 });
 
-app.on('open-url', () => {
-  console.log('@@@@');
+app.on('open-url', (event, url) => {
+  if(app.isReady()) {
+
+  }
+  customUrl = url;
+  dialog.showMessageBox(null, {
+    message: customUrl,
+  });
 });
 
 app.on('window-all-closed', () => {

@@ -1,4 +1,5 @@
-const { observable } = require('mobx');
+import { observable } from 'mobx';
+import uuidv4 from 'uuid/v4';
 
 // const userStore = observable({
 //   isLoggingIn: false,
@@ -16,12 +17,36 @@ const { observable } = require('mobx');
 //   },
 // });
 
-const uploadItemStore = observable({
-  fileName: '',
+// {
+//   type: '',
+//   fileName: '',
+//   status: '',
+//   error: '',
+//   progress: 0,
+// }
+const transferListStore = observable({
+  data: [],
+  addItem(item) {
+    item.id = uuidv4();
+    this.data.push(item);
+  },
+  updateStatus(newItem) {
+    const itemToTake = this.findItem(newItem.id);
+    if (itemToTake === null) {
+      return;
+    }
+    itemToTake.status = newItem.status;
+    itemToTake.progress = newItem.progress;
+    console.log(this.data);
+  },
+  findItem(id) {
+    for (let i = 0; i < this.data.length; i++) {
+      if (this.data[i].id === id) {
+        return this.data[i];
+      }
+    }
+    return null;
+  },
 });
 
-const downloadItemStore = observable({
-  fileName: '',
-});
-
-export { uploadItemStore, downloadItemStore };
+export { transferListStore };

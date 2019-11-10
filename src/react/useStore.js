@@ -1,7 +1,7 @@
-import { uploadItemStore, downloadItemStore } from './store';
+import { transferListStore } from './store';
 
 function useStore() {
-  return { uploadItemStore, downloadItemStore };
+  return { transferListStore };
 }
 
 export default useStore;
