@@ -18,15 +18,15 @@ const FileSelection = () => {
     ipcRenderer.send(channels.FILE_OPEN);
   };
 
-  const handleTestClick = () => {
-    const item = transferListStore.data[0];
-    item.progress = 40;
-    transferListStore.updateStatus(item);
-  };
-
-  ipcRenderer.on(channels.FILE_OPEN, (event, arg) => {
-    const { filePath } = arg;
-    state.filePath = filePath;
+  ipcRenderer.on(channels.FILE_OPEN, (event, args) => {
+    const { filePath, fileName } = args;
+    console.log(args);
+    transferListStore.addItem({
+      filePath,
+      fileName,
+      status: 'queued',
+      progress: 0,
+    });
   });
 
   return useObserver(() => (
@@ -34,7 +34,6 @@ const FileSelection = () => {
       <Button icon="upload" onClick={handleUploadClick}>
         업로드
       </Button>
-      <Button onClick={handleTestClick}>Test</Button>
     </>
   ));
 };

@@ -28,24 +28,19 @@ const transferListStore = observable({
   data: [],
   addItem(item) {
     item.id = uuidv4();
-    this.data.push(item);
+    this.data = [...this.data, item];
   },
-  updateStatus(newItem) {
-    const itemToTake = this.findItem(newItem.id);
-    if (itemToTake === null) {
-      return;
-    }
-    itemToTake.status = newItem.status;
-    itemToTake.progress = newItem.progress;
-    console.log(this.data);
+  update(newItem) {
+    const idx = this.data.findIndex(item => item.id === newItem.id);
+    this.data = [
+      ...this.data.slice(0, idx),
+      newItem,
+      ...this.data.slice(idx + 1),
+    ];
   },
-  findItem(id) {
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.data[i].id === id) {
-        return this.data[i];
-      }
-    }
-    return null;
+  find(id) {
+    const itemToTake = this.data.find(item => item.id === id);
+    return itemToTake;
   },
 });
 

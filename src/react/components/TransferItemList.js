@@ -1,18 +1,31 @@
 import React from 'react';
-import { List, Progress, Avatar } from 'antd';
+import { List, Progress, Avatar, Tooltip, Button, Icon } from 'antd';
+import { useObserver } from 'mobx-react';
 import useStore from '../useStore';
 import getStatusText from '../utils/getStatusText';
+
+const ButtonGroup = Button.Group;
 
 const TransferItemList = () => {
   const { transferListStore } = useStore();
 
-  return (
+  return useObserver(() => (
     <List
       dataSource={transferListStore.data}
       renderItem={item => (
         <List.Item
           actions={
-            item.status === 'working' ? null : [<a key="item-remove">삭제</a>]
+            item.status === 'working'
+              ? [
+                <ButtonGroup>
+                    <Button icon="stop" type="primary" size="small" />
+                  </ButtonGroup>,
+                ]
+              : [
+                <ButtonGroup>
+                    <Button icon="delete" type="primary" size="small" />
+                  </ButtonGroup>,
+                ]
           }
         >
           <List.Item.Meta
@@ -39,7 +52,7 @@ const TransferItemList = () => {
         </List.Item>
       )}
     />
-  );
+  ));
 };
 
 export default TransferItemList;

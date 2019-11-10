@@ -38,7 +38,7 @@ function createWindow() {
 }
 
 let customUrl = '';
-let mode = '';
+const mode = '';
 
 app.on('ready', () => {
   // protocol.registerFileProtocol(PROTOCOL, (request, callback) => {
@@ -53,8 +53,7 @@ app.on('ready', () => {
 });
 
 app.on('open-url', (event, url) => {
-  if(app.isReady()) {
-
+  if (app.isReady()) {
   }
   customUrl = url;
   dialog.showMessageBox(null, {
@@ -83,7 +82,11 @@ ipcMain.on(channels.FILE_OPEN, async event => {
   if (result.canceled) {
     return;
   }
+
+  const filePath = result.filePaths[0];
+
   event.sender.send(channels.FILE_OPEN, {
-    filePath: result.filePaths,
+    filePath,
+    fileName: path.basename(filePath),
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Button } from 'antd';
+import { Layout } from 'antd';
 import FileSelection from './FileSelection';
 import './Toolbar.css';
 

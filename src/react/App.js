@@ -35,7 +35,7 @@ const App = () => {
     <div>
       <Layout>
         <Toolbar />
-        <Content style={{ padding: 24 }}>
+        <Content style={{ padding: 15 }}>
           <TransferItemList />
         </Content>
       </Layout>

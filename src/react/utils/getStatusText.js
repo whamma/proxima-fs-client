@@ -4,7 +4,7 @@ const getStatusText = status => {
       return '대기중';
     case 'working':
       return '전송중';
-    case 'canceled':
+    case 'aborted':
       return '취소됨';
     case 'error':
       return '오류';

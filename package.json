@@ -44,7 +44,9 @@
   },
   "scripts": {
     "electron": "NODE_ENV=dev nodemon --exec \"\"electron .\"\"",
+    "electron:win": "set NODE_ENV=dev&&nodemon --exec \"\"electron .\"\"",
     "start": "BROWSER=none react-app-rewired start",
+    "start:win": "set BROWSER=none&&react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
