@@ -1,10 +1,12 @@
 const electron = require('electron');
 
-const { app, dialog, protocol, ipcMain, BrowserWindow } = electron;
+const { app, dialog, Tray, Menu, ipcMain, BrowserWindow } = electron;
 
 const path = require('path');
 const isDev = require('electron-is-dev');
 const Url = require('url-parse');
+const logger = require('electron-log');
+
 const { channels } = require('../src/shared/constants');
 const { openFile } = require('./openFile');
 
@@ -13,6 +15,21 @@ const { openFile } = require('./openFile');
 const PROTOCOL = 'gemiso.proxima-fs';
 
 let mainWindow;
+
+const appLock = app.requestSingleInstanceLock();
+
+if (!appLock) {
+  app.quit();
+  app.exit();
+} else {
+  app.on('second-instance', (event, argv, workingDir) => {
+    logger.debug(`second-instance : ${JSON.stringify(argv)}`);
+    if (mainWindow) {
+      mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -30,25 +47,55 @@ function createWindow() {
     mainWindow.loadFile('build/index.html');
   }
 
-  mainWindow.webContents.openDevTools();
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
 
+// function createTray() {
+//   mainWindow.on('close', event => {
+//     event.preventDefault();
+//     mainWindow.hide();
+//   });
+
+//   const tray = new Tray(path.join(__static, 'favicon.ico'));
+//   tray.on('click', () => {
+//     // mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+//     mainWindow.show();
+//   });
+//   const contextMenu = Menu.buildFromTemplate([
+//     {
+//       label: `v${app.getVersion()}`,
+//     },
+//     {
+//       label: 'Close',
+//       click() {
+//         mainWindow.close();
+//         app.quit();
+//         app.exit();
+//       },
+//     },
+//   ]);
+//   tray.setContextMenu(contextMenu);
+// }
+
 let customUrl = '';
-const mode = '';
 
 app.on('ready', () => {
-  // protocol.registerFileProtocol(PROTOCOL, (request, callback) => {
-  //   const url = new Url(request.url);
-  //   dialog.showMessageBox(mainWindow, {
-  //     message: url.query,
-  //   });
-  // });
+  const mockArgs = 'gemiso.proxima-fs://?job_id=10';
+  logger.debug('App started.');
+  logger.debug(process.argv);
 
-  console.log('protocol registed');
+  if (!isDev && !app.isDefaultProtocolClient(PROTOCOL)) {
+    const filePath = app.getPath('exe');
+    console.log(`filePath: ${filePath}`);
+    app.setAsDefaultProtocolClient(PROTOCOL, filePath);
+  }
+
   createWindow();
 });
 
