@@ -22,6 +22,7 @@ const FileSelection = () => {
     const { filePath, fileName } = args;
     console.log(args);
     transferListStore.addItem({
+      type: 'upload',
       filePath,
       fileName,
       status: 'queued',
