@@ -44,7 +44,7 @@
     "electron-is-dev": "^1.1.0",
     "electron-log": "^3.0.9",
     "electron-store": "^5.1.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "react": "^16.11.0",
